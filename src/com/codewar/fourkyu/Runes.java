@@ -69,7 +69,6 @@ public class Runes {
 		String rhs = expression.substring(expression.indexOf("=") + 1, expression.length());
 
 		for (Integer integer : digitAbsent) {
-			System.out.println(evaluateLHS(lhs, integer) + "     " + (evaluateRHS(rhs, integer)));
 			if (evaluateLHS(lhs, integer).equals(evaluateRHS(rhs, integer))) {
 				missingDigit = integer;
 				break;
@@ -97,7 +96,7 @@ public class Runes {
 	}
 
 	private static String evaluateLHS(String lhs, int digitToCheck) {
-		lhs = lhs.replaceAll("\\?", String.valueOf(digitToCheck));
+//		lhs = lhs.replaceAll("\\?", String.valueOf(digitToCheck));
 
 		int posOfAdd = lhs.indexOf("+");
 		int posOfMul = lhs.indexOf("*");
