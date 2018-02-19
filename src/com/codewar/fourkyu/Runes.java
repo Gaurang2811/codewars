@@ -1,5 +1,8 @@
 package com.codewar.fourkyu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * <p>
  * To give credit where credit is due: This problem was taken from the
@@ -48,25 +51,92 @@ package com.codewar.fourkyu;
 public class Runes {
 
 	public static void main(String[] args) {
-		System.out.println(solveExpression("1+1=?"));
+		// System.out.println(solveExpression("1+1=?"));
 		// System.out.println(solveExpression("123*45?=5?088"));
 		// System.out.println(solveExpression("-5?*-1=5?"));
 		// System.out.println(solveExpression("19--45=5?"));
-		// System.out.println(solveExpression("??*??=302?"));
-		// System.out.println(solveExpression("?*11=??"));
+		System.out.println(solveExpression("-7715?5--484?00=-28?9?5"));
+		System.out.println(solveExpression("123?45-?=123?45"));
+
 	}
 
 	public static int solveExpression(final String expression) {
 		int missingDigit = -1;
 
-		
-		
-		// Write code to determine the missing digit or unknown rune
-		// Expression will always be in the form
-		// (number)[opperator](number)=(number)
-		// Unknown digit will not be the same as any other digits used in
-		// expression
+		List<Integer> digitAbsent = getAbsentDigit(expression);
 
+		String lhs = expression.substring(0, expression.indexOf("="));
+		String rhs = expression.substring(expression.indexOf("=") + 1, expression.length());
+
+		for (Integer integer : digitAbsent) {
+			System.out.println(evaluateLHS(lhs, integer) + "     " + (evaluateRHS(rhs, integer)));
+			if (evaluateLHS(lhs, integer).equals(evaluateRHS(rhs, integer))) {
+				missingDigit = integer;
+				break;
+			}
+		}
 		return missingDigit;
 	}
+
+	private static List<Integer> getAbsentDigit(String expression) {
+		List<Integer> digitPresent = new ArrayList<>();
+		for (int i = 0; i <= expression.length(); i++) {
+			try {
+				int num = Integer.parseInt(expression.charAt(i) + "");
+				if (!digitPresent.contains(num))
+					digitPresent.add(num);
+			} catch (Exception e) {
+			}
+		}
+		List<Integer> digitAbsent = new ArrayList<>();
+		for (int i = 0; i <= 9; i++) {
+			if (!digitPresent.contains(i))
+				digitAbsent.add(i);
+		}
+		return digitAbsent;
+	}
+
+	private static String evaluateLHS(String lhs, int digitToCheck) {
+		lhs = lhs.replaceAll("\\?", String.valueOf(digitToCheck));
+
+		int posOfAdd = lhs.indexOf("+");
+		int posOfMul = lhs.indexOf("*");
+		int posOfSub = lhs.indexOf("-") == 0 ? lhs.substring(1, lhs.length()).indexOf("-") + 1 : lhs.indexOf("-");
+		int firstNum = 0;
+		int secondNum = 0;
+		String operator = "";
+		String result = "";
+
+		if (posOfAdd > 0) {
+			firstNum = Integer.parseInt(lhs.substring(0, posOfAdd));
+			secondNum = Integer.parseInt(lhs.substring(posOfAdd + 1, lhs.length()));
+			operator = "+";
+		} else if (posOfMul > 0) {
+			firstNum = Integer.parseInt(lhs.substring(0, posOfMul));
+			secondNum = Integer.parseInt(lhs.substring(posOfMul + 1, lhs.length()));
+			operator = "*";
+		} else if (posOfSub > 0) {
+			firstNum = Integer.parseInt(lhs.substring(0, posOfSub));
+			secondNum = Integer.parseInt(lhs.substring(posOfSub + 1, lhs.length()));
+			operator = "-";
+		}
+		switch (operator) {
+		case "+":
+			result = "" + (firstNum + secondNum);
+			break;
+		case "-":
+			result = "" + (firstNum - secondNum);
+			break;
+		case "*":
+			result = "" + (firstNum * secondNum);
+			break;
+		}
+		return result;
+	}
+
+	private static String evaluateRHS(String rhs, int digitToCheck) {
+		rhs = rhs.replaceAll("\\?", String.valueOf(digitToCheck));
+		return rhs;
+	}
+
 }
