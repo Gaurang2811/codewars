@@ -1,6 +1,11 @@
 package com.codewar;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * 
@@ -27,17 +32,37 @@ public class DescendingOrder {
 
 	public static void main(String[] args) {
 
-		// System.out.println(sortDesc(0));
-		System.out.println(sortDesc(15));
-		System.out.println(sortDesc(21445));
-		System.out.println(sortDesc(145263));
-		System.out.println(sortDesc(123456789));
-		System.out.println(sortDesc(1254859723));
+		System.out.println(sortDesc1(0));
+		System.out.println(sortDesc1(15));
+		System.out.println(sortDesc1(21445));
+		System.out.println(sortDesc1(145263));
+		System.out.println(sortDesc1(123456789));
+		System.out.println(sortDesc1(12859723));
 
 	}
 
 	public static int sortDesc(final int num) {
+		Map<Integer, Integer> map = new TreeMap<Integer, Integer>(Collections.reverseOrder());
+		for (char i : String.valueOf(num).toCharArray()) {
+			int temp = i - 48;
+			if (map.containsKey(temp))
+				map.put(temp, map.get(temp) + 1);
+			else
+				map.put(temp, 1);
+		}
+		String revstr = "";
+		for (Entry<Integer, Integer> entry : map.entrySet()) {
+			int timesLoop = entry.getValue();
+			for (int i = 0; i < timesLoop; i++) {
+				revstr += entry.getKey();
+			}
+		}
 
-		return 0;
+		return Integer.parseInt(revstr);
+	}
+
+	public static int sortDesc1(final int num) {
+		return Integer.parseInt(String.valueOf(num).chars().mapToObj(i -> String.valueOf(Character.getNumericValue(i)))
+				.sorted(Collections.reverseOrder()).collect(Collectors.joining()));
 	}
 }
