@@ -1,4 +1,4 @@
-package ques;
+package com.codewar;
 
 import java.util.HashMap;
 import java.util.Map;
